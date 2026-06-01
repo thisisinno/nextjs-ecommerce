@@ -9,6 +9,13 @@ from .permissions import IsStaffOrSuperuser
 from .serializers import AnalyticsEventSerializer, CartActivitySerializer, CategorySerializer, ContentBlockSerializer, FilterGroupSerializer, FilterOptionSerializer, MediaAssetSerializer, MenuItemSerializer, MenuSerializer, OrderSerializer, PageSerializer, ProductSerializer, SectionSerializer, UserSummarySerializer
 
 
+class APIHealthView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        return Response({"status": "ok", "service": "ecommerce-api"})
+
+
 class CurrentUserView(APIView):
     permission_classes = [IsAuthenticated]
 

@@ -1,16 +1,35 @@
 "use client";
 
 import Breadcrumb from "@/components/Common/Breadcrumb";
-import { login } from "@/lib/api/auth";
+import { loginUser } from "@/lib/api/auth";
+import { ApiError } from "@/lib/api/client";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+
+const getSigninErrorMessage = (error: unknown) => {
+  if (error instanceof ApiError) {
+    if (error.status === 0) {
+      return "Cannot reach backend API. Check network, CORS, HTTPS, Nginx, or backend server.";
+    }
+    if (error.status === 401) return "Invalid username or password.";
+    if (error.status >= 500) return "Server error. Please check backend logs.";
+    return error.message || "Unable to sign in.";
+  }
+
+  return error instanceof Error && error.message
+    ? error.message
+    : "Unable to sign in with those credentials.";
+};
 
 const Signin = () => {
   const { refreshUser } = useAdminAuth();
+  const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
     <>
@@ -30,24 +49,31 @@ const Signin = () => {
                 onSubmit={async (event) => {
                   event.preventDefault();
                   setError("");
+                  setIsLoading(true);
                   try {
-                    await login(username, password);
+                    await loginUser(username.trim(), password);
                     await refreshUser();
-                  } catch {
-                    setError("Unable to sign in with those credentials.");
+                    router.push("/my-account");
+                  } catch (error) {
+                    setError(getSigninErrorMessage(error));
+                    if (process.env.NODE_ENV !== "production") {
+                      console.error("[auth] login failed", error);
+                    }
+                  } finally {
+                    setIsLoading(false);
                   }
                 }}
               >
                 <div className="mb-5">
-                  <label htmlFor="email" className="block mb-2.5">
-                    Email
+                  <label htmlFor="username" className="block mb-2.5">
+                    Username
                   </label>
 
                   <input
                     type="text"
-                    name="email"
-                    id="email"
-                    placeholder="Enter your email"
+                    name="username"
+                    id="username"
+                    placeholder="Enter your username"
                     value={username}
                     onChange={(event) => setUsername(event.target.value)}
                     className="rounded-lg border border-gray-3 bg-gray-1 placeholder:text-dark-5 w-full py-3 px-5 outline-none duration-200 focus:border-transparent focus:shadow-input focus:ring-2 focus:ring-blue/20"
@@ -75,9 +101,10 @@ const Signin = () => {
 
                 <button
                   type="submit"
+                  disabled={isLoading}
                   className="w-full flex justify-center font-medium text-white bg-dark py-3 px-6 rounded-lg ease-out duration-200 hover:bg-blue mt-7.5"
                 >
-                  Sign in to account
+                  {isLoading ? "Signing in..." : "Sign in to account"}
                 </button>
 
                 <a
@@ -93,7 +120,7 @@ const Signin = () => {
                 </span>
 
                 <div className="flex flex-col gap-4.5 mt-4.5">
-                  <button className="flex justify-center items-center gap-3.5 rounded-lg border border-gray-3 bg-gray-1 p-3 ease-out duration-200 hover:bg-gray-2">
+                  <button type="button" className="flex justify-center items-center gap-3.5 rounded-lg border border-gray-3 bg-gray-1 p-3 ease-out duration-200 hover:bg-gray-2">
                     <svg
                       width="20"
                       height="20"
@@ -140,7 +167,7 @@ const Signin = () => {
                     Sign In with Google
                   </button>
 
-                  <button className="flex justify-center items-center gap-3.5 rounded-lg border border-gray-3 bg-gray-1 p-3 ease-out duration-200 hover:bg-gray-2">
+                  <button type="button" className="flex justify-center items-center gap-3.5 rounded-lg border border-gray-3 bg-gray-1 p-3 ease-out duration-200 hover:bg-gray-2">
                     <svg
                       width="22"
                       height="22"
