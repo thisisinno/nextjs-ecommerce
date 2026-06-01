@@ -10,11 +10,18 @@ import PriceDropdown from "./PriceDropdown";
 import shopData from "../Shop/shopData";
 import SingleGridItem from "../Shop/SingleGridItem";
 import SingleListItem from "../Shop/SingleListItem";
+import { getFilterGroups } from "@/lib/api/filters";
+import { getProducts } from "@/lib/api/products";
+import { asArray } from "@/types/api";
+import { mapFilterGroups } from "@/mappers/filterMapper";
+import { mapProducts } from "@/mappers/productMapper";
 
 const ShopWithSidebar = () => {
   const [productStyle, setProductStyle] = useState("grid");
   const [productSidebar, setProductSidebar] = useState(false);
   const [stickyMenu, setStickyMenu] = useState(false);
+  const [products, setProducts] = useState(shopData);
+  const [filterGroups, setFilterGroups] = useState([]);
 
   const handleStickyMenu = () => {
     if (window.scrollY >= 80) {
@@ -77,6 +84,25 @@ const ShopWithSidebar = () => {
       products: 8,
     },
   ];
+
+  const refreshFilters = () => {
+    getFilterGroups()
+      .then((data) => setFilterGroups(mapFilterGroups(asArray(data))))
+      .catch(() => setFilterGroups([]));
+  };
+
+  useEffect(() => {
+    refreshFilters();
+    getProducts()
+      .then((data) => {
+        const mapped = mapProducts(asArray(data));
+        if (mapped.length) setProducts(mapped);
+      })
+      .catch(() => setProducts(shopData));
+  }, []);
+
+  const categoryGroup = filterGroups.find((group) => group.type === "category");
+  const genderGroup = filterGroups.find((group) => group.type === "gender");
 
   useEffect(() => {
     window.addEventListener("scroll", handleStickyMenu);
@@ -157,10 +183,18 @@ const ShopWithSidebar = () => {
                   </div>
 
                   {/* <!-- category box --> */}
-                  <CategoryDropdown categories={categories} />
+                  <CategoryDropdown
+                    categories={categoryGroup?.options?.length ? categoryGroup.options : categories}
+                    group={categoryGroup}
+                    onCreated={refreshFilters}
+                  />
 
                   {/* <!-- gender box --> */}
-                  <GenderDropdown genders={genders} />
+                  <GenderDropdown
+                    genders={genderGroup?.options?.length ? genderGroup.options : genders}
+                    group={genderGroup}
+                    onCreated={refreshFilters}
+                  />
 
                   {/* // <!-- size box --> */}
                   <SizeDropdown />
@@ -278,7 +312,7 @@ const ShopWithSidebar = () => {
                     : "flex flex-col gap-7.5"
                 }`}
               >
-                {shopData.map((item, key) =>
+                  {products.map((item, key) =>
                   productStyle === "grid" ? (
                     <SingleGridItem item={item} key={key} />
                   ) : (

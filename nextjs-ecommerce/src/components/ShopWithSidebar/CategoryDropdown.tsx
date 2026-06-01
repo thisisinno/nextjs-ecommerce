@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import EditableDropdown from "@/components/AdminInline/EditableDropdown";
 
 const CategoryItem = ({ category }) => {
   const [selected, setSelected] = useState(false);
@@ -49,10 +50,11 @@ const CategoryItem = ({ category }) => {
   );
 };
 
-const CategoryDropdown = ({ categories }) => {
+const CategoryDropdown = ({ categories, group, onCreated, title = "Category" }) => {
   const [toggleDropdown, setToggleDropdown] = useState(true);
 
   return (
+    <EditableDropdown group={group} onCreated={onCreated}>
     <div className="bg-white shadow-1 rounded-lg">
       <div
         onClick={(e) => {
@@ -63,7 +65,7 @@ const CategoryDropdown = ({ categories }) => {
           toggleDropdown && "shadow-filter"
         }`}
       >
-        <p className="text-dark">Category</p>
+        <p className="text-dark">{title}</p>
         <button
           aria-label="button for category dropdown"
           className={`text-dark ease-out duration-200 ${
@@ -100,6 +102,7 @@ const CategoryDropdown = ({ categories }) => {
         ))}
       </div>
     </div>
+    </EditableDropdown>
   );
 };
 

@@ -26,6 +26,12 @@ yarn-error.log*
 
 # local env files
 .env*.local
+ecommerce_project/.env
+ecommerce_project/db.sqlite3
+ecommerce_project/media/
+ecommerce_project/venv/
+__pycache__/
+*.py[cod]
 
 # vercel
 .vercel

@@ -1,8 +1,17 @@
+"use client";
+
 import Breadcrumb from "@/components/Common/Breadcrumb";
+import { login } from "@/lib/api/auth";
+import { useAdminAuth } from "@/hooks/useAdminAuth";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 
 const Signin = () => {
+  const { refreshUser } = useAdminAuth();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
   return (
     <>
       <Breadcrumb title={"Signin"} pages={["Signin"]} />
@@ -17,17 +26,30 @@ const Signin = () => {
             </div>
 
             <div>
-              <form>
+              <form
+                onSubmit={async (event) => {
+                  event.preventDefault();
+                  setError("");
+                  try {
+                    await login(username, password);
+                    await refreshUser();
+                  } catch {
+                    setError("Unable to sign in with those credentials.");
+                  }
+                }}
+              >
                 <div className="mb-5">
                   <label htmlFor="email" className="block mb-2.5">
                     Email
                   </label>
 
                   <input
-                    type="email"
+                    type="text"
                     name="email"
                     id="email"
                     placeholder="Enter your email"
+                    value={username}
+                    onChange={(event) => setUsername(event.target.value)}
                     className="rounded-lg border border-gray-3 bg-gray-1 placeholder:text-dark-5 w-full py-3 px-5 outline-none duration-200 focus:border-transparent focus:shadow-input focus:ring-2 focus:ring-blue/20"
                   />
                 </div>
@@ -43,9 +65,13 @@ const Signin = () => {
                     id="password"
                     placeholder="Enter your password"
                     autoComplete="on"
+                    value={password}
+                    onChange={(event) => setPassword(event.target.value)}
                     className="rounded-lg border border-gray-3 bg-gray-1 placeholder:text-dark-5 w-full py-3 px-5 outline-none duration-200 focus:border-transparent focus:shadow-input focus:ring-2 focus:ring-blue/20"
                   />
                 </div>
+
+                {error && <p className="text-custom-sm text-red mb-5">{error}</p>}
 
                 <button
                   type="submit"

@@ -4,6 +4,10 @@ import Link from "next/link";
 import CustomSelect from "./CustomSelect";
 import { menuData } from "./menuData";
 import Dropdown from "./Dropdown";
+import { getMenus } from "@/lib/api/menus";
+import { asArray } from "@/types/api";
+import { mapMenuItems } from "@/mappers/menuMapper";
+import { Menu } from "@/types/Menu";
 import { useAppSelector } from "@/redux/store";
 import { useSelector } from "react-redux";
 import { selectTotalPrice } from "@/redux/features/cart-slice";
@@ -14,6 +18,7 @@ const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [navigationOpen, setNavigationOpen] = useState(false);
   const [stickyMenu, setStickyMenu] = useState(false);
+  const [menus, setMenus] = useState<Menu[]>(menuData);
   const { openCartModal } = useCartModalContext();
 
   const product = useAppSelector((state) => state.cartReducer.items);
@@ -35,6 +40,15 @@ const Header = () => {
   useEffect(() => {
     window.addEventListener("scroll", handleStickyMenu);
   });
+
+  useEffect(() => {
+    getMenus()
+      .then((data) => {
+        const headerMenu = asArray(data).find((menu) => menu.location === "header");
+        if (headerMenu?.items?.length) setMenus(mapMenuItems(headerMenu.items));
+      })
+      .catch(() => setMenus(menuData));
+  }, []);
 
   const options = [
     { label: "All Categories", value: "0" },
@@ -302,7 +316,7 @@ const Header = () => {
               {/* <!-- Main Nav Start --> */}
               <nav>
                 <ul className="flex xl:items-center flex-col xl:flex-row gap-5 xl:gap-6">
-                  {menuData.map((menuItem, i) =>
+                  {menus.map((menuItem, i) =>
                     menuItem.submenu ? (
                       <Dropdown
                         key={i}

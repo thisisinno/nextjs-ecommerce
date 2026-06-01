@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import EditableDropdown from "@/components/AdminInline/EditableDropdown";
 
 const GenderItem = ({ category }) => {
   const [selected, setSelected] = useState(false);
@@ -48,10 +49,11 @@ const GenderItem = ({ category }) => {
   );
 };
 
-const GenderDropdown = ({ genders }) => {
+const GenderDropdown = ({ genders, group, onCreated }) => {
   const [toggleDropdown, setToggleDropdown] = useState(true);
 
   return (
+    <EditableDropdown group={group} onCreated={onCreated}>
     <div className="bg-white shadow-1 rounded-lg">
       <div
         onClick={() => setToggleDropdown(!toggleDropdown)}
@@ -96,6 +98,7 @@ const GenderDropdown = ({ genders }) => {
         ))}
       </div>
     </div>
+    </EditableDropdown>
   );
 };
 

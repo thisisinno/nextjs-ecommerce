@@ -1,0 +1,33 @@
+from django.urls import path
+
+from . import views
+
+urlpatterns = [
+    path("auth/me/", views.CurrentUserView.as_view(), name="current-user"),
+    path("pages/", views.PageListView.as_view(), name="page-list"),
+    path("pages/<slug:slug>/", views.PageDetailView.as_view(), name="page-detail"),
+    path("sections/", views.SectionListView.as_view(), name="section-list"),
+    path("content-blocks/", views.ContentBlockListView.as_view(), name="content-block-list"),
+    path("menus/", views.MenuListView.as_view(), name="menu-list"),
+    path("filter-groups/", views.FilterGroupListView.as_view(), name="filter-group-list"),
+    path("products/", views.ProductListView.as_view(), name="product-list"),
+    path("products/<slug:slug>/", views.ProductDetailView.as_view(), name="product-detail"),
+    path("categories/", views.CategoryListView.as_view(), name="category-list"),
+    path("analytics-events/", views.AnalyticsEventCreateView.as_view(), name="analytics-event-create"),
+    path("cart-activities/", views.CartActivityCreateView.as_view(), name="cart-activity-create"),
+    path("admin/content-blocks/", views.ContentBlockListCreateView.as_view(), name="admin-content-block-list"),
+    path("admin/content-blocks/<int:pk>/", views.ContentBlockDetailView.as_view(), name="admin-content-block-detail"),
+    path("admin/media/", views.MediaAssetListCreateView.as_view(), name="admin-media-list"),
+    path("admin/media/<int:pk>/", views.MediaAssetDetailView.as_view(), name="admin-media-detail"),
+    path("admin/menus/", views.MenuListCreateView.as_view(), name="admin-menu-list"),
+    path("admin/menus/<int:pk>/", views.MenuDetailView.as_view(), name="admin-menu-detail"),
+    path("admin/menu-items/", views.MenuItemListCreateView.as_view(), name="admin-menu-item-list"),
+    path("admin/menu-items/<int:pk>/", views.MenuItemDetailView.as_view(), name="admin-menu-item-detail"),
+    path("admin/filter-groups/", views.FilterGroupListCreateView.as_view(), name="admin-filter-group-list"),
+    path("admin/filter-groups/<int:pk>/", views.FilterGroupDetailView.as_view(), name="admin-filter-group-detail"),
+    path("admin/filter-options/", views.FilterOptionListCreateView.as_view(), name="admin-filter-option-list"),
+    path("admin/filter-options/<int:pk>/", views.FilterOptionDetailView.as_view(), name="admin-filter-option-detail"),
+    path("admin/orders/", views.AdminOrderListView.as_view(), name="admin-order-list"),
+    path("admin/analytics/", views.AdminAnalyticsListView.as_view(), name="admin-analytics-list"),
+    path("admin/cart-activities/", views.AdminCartActivityListView.as_view(), name="admin-cart-activity-list"),
+]

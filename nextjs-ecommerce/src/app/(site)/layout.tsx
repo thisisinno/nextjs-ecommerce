@@ -15,6 +15,9 @@ import PreviewSliderModal from "@/components/Common/PreviewSlider";
 
 import ScrollToTop from "@/components/Common/ScrollToTop";
 import PreLoader from "@/components/Common/PreLoader";
+import { EditModeProvider } from "@/components/AdminInline/EditModeProvider";
+import AdminBottomNav from "@/components/AdminInline/AdminBottomNav";
+import AnalyticsTracker from "@/components/AdminInline/AnalyticsTracker";
 
 export default function RootLayout({
   children,
@@ -35,18 +38,22 @@ export default function RootLayout({
         ) : (
           <>
             <ReduxProvider>
-              <CartModalProvider>
-                <ModalProvider>
-                  <PreviewSliderProvider>
-                    <Header />
-                    {children}
+              <EditModeProvider>
+                <CartModalProvider>
+                  <ModalProvider>
+                    <PreviewSliderProvider>
+                      <AnalyticsTracker />
+                      <Header />
+                      {children}
 
-                    <QuickViewModal />
-                    <CartSidebarModal />
-                    <PreviewSliderModal />
-                  </PreviewSliderProvider>
-                </ModalProvider>
-              </CartModalProvider>
+                      <QuickViewModal />
+                      <CartSidebarModal />
+                      <PreviewSliderModal />
+                      <AdminBottomNav />
+                    </PreviewSliderProvider>
+                  </ModalProvider>
+                </CartModalProvider>
+              </EditModeProvider>
             </ReduxProvider>
             <ScrollToTop />
             <Footer />
