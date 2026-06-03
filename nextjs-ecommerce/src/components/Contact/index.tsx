@@ -1,5 +1,6 @@
 import React from "react";
 import Breadcrumb from "../Common/Breadcrumb";
+import EditableText from "@/components/AdminInline/EditableText";
 
 const Contact = () => {
   return (
@@ -11,9 +12,7 @@ const Contact = () => {
           <div className="flex flex-col xl:flex-row gap-7.5">
             <div className="xl:max-w-[370px] w-full bg-white rounded-xl shadow-1">
               <div className="py-5 px-4 sm:px-7.5 border-b border-gray-3">
-                <p className="font-medium text-xl text-dark">
-                  Contact Information
-                </p>
+                <EditableText as="p" className="font-medium text-xl text-dark" pageSlug="contact" sectionKey="info" contentKey="info_title" contentType="title" value="Contact Information" />
               </div>
 
               <div className="p-4 sm:p-7.5">
@@ -33,7 +32,7 @@ const Contact = () => {
                         fill="#3C50E0"
                       />
                     </svg>
-                    Name: James Septimus
+                    <EditableText pageSlug="contact" sectionKey="info" contentKey="contact_name" contentType="text" value="Name: James Septimus" />
                   </p>
 
                   <p className="flex items-center gap-4">
@@ -61,7 +60,7 @@ const Contact = () => {
                         fill="#3C50E0"
                       />
                     </svg>
-                    Phone: 1234 567890
+                    <EditableText pageSlug="contact" sectionKey="info" contentKey="contact_phone" contentType="text" value="Phone: 1234 567890" />
                   </p>
 
                   <p className="flex gap-4">
@@ -80,7 +79,7 @@ const Contact = () => {
                         fill="#3C50E0"
                       />
                     </svg>
-                    Address: 7398 Smoke Ranch RoadLas Vegas, Nevada 89128
+                    <EditableText pageSlug="contact" sectionKey="info" contentKey="contact_address" contentType="text" value="Address: 7398 Smoke Ranch RoadLas Vegas, Nevada 89128" multiline />
                   </p>
                 </div>
               </div>
@@ -166,7 +165,7 @@ const Contact = () => {
                   type="submit"
                   className="inline-flex font-medium text-white bg-blue py-3 px-7 rounded-md ease-out duration-200 hover:bg-blue-dark"
                 >
-                  Send Message
+                  <EditableText pageSlug="contact" sectionKey="form" contentKey="send_message_button" contentType="button" value="Send Message" />
                 </button>
               </form>
             </div>

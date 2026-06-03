@@ -49,7 +49,9 @@ export function getStoredRefreshToken() {
 }
 
 export function getCurrentUser() {
-  return apiRequest<ApiUser>("/auth/me/");
+  const access = getStoredAccessToken();
+  if (!access) return Promise.resolve(null);
+  return apiRequest<ApiUser>("/auth/me/", { silent: true });
 }
 
 export async function refreshAccessToken() {
@@ -69,7 +71,7 @@ export async function refreshAccessToken() {
 
 export async function isAdminUser() {
   const user = await getCurrentUser();
-  return Boolean(user.is_staff || user.is_superuser);
+  return Boolean(user?.is_staff || user?.is_superuser);
 }
 
 export const login = loginUser;

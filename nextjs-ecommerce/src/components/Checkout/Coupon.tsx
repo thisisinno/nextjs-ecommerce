@@ -1,10 +1,11 @@
 import React from "react";
+import EditableText from "@/components/AdminInline/EditableText";
 
 const Coupon = () => {
   return (
     <div className="bg-white shadow-1 rounded-[10px] mt-7.5">
       <div className="border-b border-gray-3 py-5 px-4 sm:px-8.5">
-        <h3 className="font-medium text-xl text-dark">Have any Coupon Code?</h3>
+        <EditableText as="h3" className="font-medium text-xl text-dark" pageSlug="checkout" sectionKey="coupon" contentKey="coupon_title" contentType="title" value="Have any Coupon Code?" />
       </div>
 
       <div className="py-8 px-4 sm:px-8.5">
@@ -21,7 +22,7 @@ const Coupon = () => {
             type="submit"
             className="inline-flex font-medium text-white bg-blue py-3 px-6 rounded-md ease-out duration-200 hover:bg-blue-dark"
           >
-            Apply
+            <EditableText pageSlug="checkout" sectionKey="coupon" contentKey="apply_coupon_button" contentType="button" value="Apply" />
           </button>
         </div>
       </div>

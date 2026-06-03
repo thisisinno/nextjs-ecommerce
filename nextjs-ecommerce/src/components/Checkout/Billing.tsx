@@ -1,11 +1,10 @@
 import React from "react";
+import EditableText from "@/components/AdminInline/EditableText";
 
 const Billing = () => {
   return (
     <div className="mt-9">
-      <h2 className="font-medium text-dark text-xl sm:text-2xl mb-5.5">
-        Billing details
-      </h2>
+      <EditableText as="h2" className="font-medium text-dark text-xl sm:text-2xl mb-5.5" pageSlug="checkout" sectionKey="billing" contentKey="billing_title" contentType="title" value="Billing details" />
 
       <div className="bg-white shadow-1 rounded-[10px] p-4 sm:p-8.5">
         <div className="flex flex-col lg:flex-row gap-5 sm:gap-8 mb-5">
@@ -77,7 +76,7 @@ const Billing = () => {
                   d="M2.41469 5.03569L2.41467 5.03571L2.41749 5.03846L7.76749 10.2635L8.0015 10.492L8.23442 10.2623L13.5844 4.98735L13.5844 4.98735L13.5861 4.98569C13.6809 4.89086 13.8199 4.89087 13.9147 4.98569C14.0092 5.08024 14.0095 5.21864 13.9155 5.31345C13.9152 5.31373 13.915 5.31401 13.9147 5.31429L8.16676 10.9622L8.16676 10.9622L8.16469 10.9643C8.06838 11.0606 8.02352 11.0667 8.00039 11.0667C7.94147 11.0667 7.89042 11.0522 7.82064 10.9991L2.08526 5.36345C1.99127 5.26865 1.99154 5.13024 2.08609 5.03569C2.18092 4.94086 2.31986 4.94086 2.41469 5.03569Z"
                   fill=""
                   stroke=""
-                  stroke-width="0.666667"
+                  strokeWidth="0.666667"
                 />
               </svg>
             </span>

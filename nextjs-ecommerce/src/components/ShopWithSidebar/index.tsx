@@ -11,7 +11,7 @@ import shopData from "../Shop/shopData";
 import SingleGridItem from "../Shop/SingleGridItem";
 import SingleListItem from "../Shop/SingleListItem";
 import { getFilterGroups } from "@/lib/api/filters";
-import { getProducts } from "@/lib/api/products";
+import { getCategories, getProducts } from "@/lib/api/products";
 import { asArray } from "@/types/api";
 import { mapFilterGroups } from "@/mappers/filterMapper";
 import { mapProducts } from "@/mappers/productMapper";
@@ -22,6 +22,9 @@ const ShopWithSidebar = () => {
   const [stickyMenu, setStickyMenu] = useState(false);
   const [products, setProducts] = useState(shopData);
   const [filterGroups, setFilterGroups] = useState([]);
+  const [backendCategories, setBackendCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedFilters, setSelectedFilters] = useState({});
 
   const handleStickyMenu = () => {
     if (window.scrollY >= 80) {
@@ -89,20 +92,39 @@ const ShopWithSidebar = () => {
     getFilterGroups()
       .then((data) => setFilterGroups(mapFilterGroups(asArray(data))))
       .catch(() => setFilterGroups([]));
+    getCategories()
+      .then((data) => {
+        const flatten = (items) => items.flatMap((item) => [
+          { id: item.id, name: item.title, value: item.slug, products: item.product_count ?? 0 },
+          ...flatten(item.children ?? []),
+        ]);
+        setBackendCategories(flatten(asArray(data)));
+      })
+      .catch(() => setBackendCategories([]));
   };
 
   useEffect(() => {
     refreshFilters();
-    getProducts()
+  }, []);
+
+  useEffect(() => {
+    const search = new URLSearchParams();
+    if (selectedCategory) search.set("category", selectedCategory);
+    Object.entries(selectedFilters).forEach(([key, value]) => {
+      if (value) search.set(`filter_${key}`, String(value));
+    });
+    const query = search.toString();
+    getProducts(query ? `?${query}` : "")
       .then((data) => {
         const mapped = mapProducts(asArray(data));
         if (mapped.length) setProducts(mapped);
       })
       .catch(() => setProducts(shopData));
-  }, []);
+  }, [selectedCategory, selectedFilters]);
 
   const categoryGroup = filterGroups.find((group) => group.type === "category");
   const genderGroup = filterGroups.find((group) => group.type === "gender");
+  const visibleCategories = backendCategories.length ? backendCategories : categoryGroup?.options?.length ? categoryGroup.options : categories;
 
   useEffect(() => {
     window.addEventListener("scroll", handleStickyMenu);
@@ -184,9 +206,11 @@ const ShopWithSidebar = () => {
 
                   {/* <!-- category box --> */}
                   <CategoryDropdown
-                    categories={categoryGroup?.options?.length ? categoryGroup.options : categories}
+                    categories={visibleCategories}
                     group={categoryGroup}
                     onCreated={refreshFilters}
+                    selectedValue={selectedCategory}
+                    onSelect={setSelectedCategory}
                   />
 
                   {/* <!-- gender box --> */}
@@ -194,6 +218,8 @@ const ShopWithSidebar = () => {
                     genders={genderGroup?.options?.length ? genderGroup.options : genders}
                     group={genderGroup}
                     onCreated={refreshFilters}
+                    selectedValue={selectedFilters[genderGroup?.slug ?? "gender"] ?? ""}
+                    onSelect={(value) => setSelectedFilters((current) => ({ ...current, [genderGroup?.slug ?? "gender"]: value }))}
                   />
 
                   {/* // <!-- size box --> */}

@@ -1,12 +1,6 @@
 import { AuthTokens } from "@/types/auth";
 
-const DEFAULT_API_BASE_URL =
-  process.env.NODE_ENV === "production"
-    ? "https://ecommerce.schoolsoft.online/api"
-    : "http://127.0.0.1:8000/api";
-
-export const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/+$/, "") || DEFAULT_API_BASE_URL;
+export const API_BASE_URL = "https://ecommerce.schoolsoft.online/api";
 
 export const ACCESS_TOKEN_KEY = "ecommerce_access_token";
 export const REFRESH_TOKEN_KEY = "ecommerce_refresh_token";
@@ -15,12 +9,16 @@ const LEGACY_TOKEN_KEY = "ecommerce_auth_tokens";
 export class ApiError extends Error {
   status: number;
   data: unknown;
+  url: string;
+  method: string;
 
-  constructor(status: number, message: string, data: unknown) {
+  constructor(status: number, message: string, data: unknown, url = "", method = "GET") {
     super(message);
     this.name = "ApiError";
     this.status = status;
     this.data = data;
+    this.url = url;
+    this.method = method;
   }
 }
 
@@ -60,7 +58,10 @@ export const setStoredTokens = (tokens: AuthTokens | null) => {
   window.localStorage.setItem(REFRESH_TOKEN_KEY, tokens.refresh);
 };
 
-type ApiRequestOptions = RequestInit & { auth?: boolean };
+type ApiRequestOptions = RequestInit & {
+  auth?: boolean;
+  silent?: boolean;
+};
 
 const isDevelopment = () => process.env.NODE_ENV !== "production";
 
@@ -108,7 +109,7 @@ const getErrorMessage = (data: unknown, fallback: string) => {
 };
 
 export async function apiRequest<T>(path: string, options: ApiRequestOptions = {}): Promise<T> {
-  const { auth = true, ...fetchOptions } = options;
+  const { auth = true, silent = false, ...fetchOptions } = options;
   const headers = new Headers(options.headers);
   const isFormData = options.body instanceof FormData;
   if (!isFormData && !headers.has("Content-Type")) headers.set("Content-Type", "application/json");
@@ -120,7 +121,7 @@ export async function apiRequest<T>(path: string, options: ApiRequestOptions = {
   const url = buildApiUrl(path);
   const method = options.method || "GET";
 
-  if (isDevelopment()) {
+  if (isDevelopment() && !silent) {
     console.debug("[api]", method, url, {
       baseUrl: API_BASE_URL,
       auth,
@@ -140,7 +141,7 @@ export async function apiRequest<T>(path: string, options: ApiRequestOptions = {
     const name = error instanceof Error ? error.name : "UnknownError";
     const stack = error instanceof Error ? error.stack : undefined;
 
-    if (isDevelopment()) {
+    if (isDevelopment() && !silent) {
       console.error("[api] Network/CORS failure", {
         url,
         method,
@@ -153,18 +154,28 @@ export async function apiRequest<T>(path: string, options: ApiRequestOptions = {
     throw new ApiError(
       0,
       `Network request failed: ${message}. Check backend URL, CORS, SSL, Nginx proxy, and whether the API server is reachable.`,
-      { url, method, name, message }
+      { name, message },
+      url,
+      method
     );
   }
 
-  if (isDevelopment()) console.debug("[api] status", response.status, url);
+  if (isDevelopment() && !silent) console.debug("[api] status", response.status, url);
 
   const data = response.status === 204 ? null : await parseResponseBody(response);
 
   if (!response.ok) {
     const message = getErrorMessage(data, `Request failed with status ${response.status}`);
-    if (isDevelopment()) console.error("[api] error", { status: response.status, url, message });
-    throw new ApiError(response.status, message, data);
+    if (isDevelopment() && !silent) {
+      console.error("[api] error", {
+        status: response.status,
+        url,
+        method,
+        message,
+        data,
+      });
+    }
+    throw new ApiError(response.status, message, data, url, method);
   }
 
   if (response.status === 204) return undefined as T;

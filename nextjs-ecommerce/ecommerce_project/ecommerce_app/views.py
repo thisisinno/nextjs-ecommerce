@@ -4,9 +4,9 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import AnalyticsEvent, CartActivity, Category, ContentBlock, FilterGroup, FilterOption, MediaAsset, Menu, MenuItem, Order, Page, Product, Section
+from .models import AnalyticsEvent, CartActivity, Category, ContentBlock, FilterGroup, FilterOption, MediaAsset, Menu, MenuItem, Order, Page, Product, ProductImage, Section
 from .permissions import IsStaffOrSuperuser
-from .serializers import AnalyticsEventSerializer, CartActivitySerializer, CategorySerializer, ContentBlockSerializer, FilterGroupSerializer, FilterOptionSerializer, MediaAssetSerializer, MenuItemSerializer, MenuSerializer, OrderSerializer, PageSerializer, ProductSerializer, SectionSerializer, UserSummarySerializer
+from .serializers import AnalyticsEventSerializer, CartActivitySerializer, CategorySerializer, ContentBlockSerializer, FilterGroupSerializer, FilterOptionSerializer, MediaAssetSerializer, MenuItemSerializer, MenuSerializer, OrderSerializer, PageSerializer, ProductImageSerializer, ProductSerializer, SectionSerializer, UserSummarySerializer
 
 
 class APIHealthView(APIView):
@@ -87,13 +87,50 @@ class CategoryListView(generics.ListAPIView):
     permission_classes = [AllowAny]
 
     def get_queryset(self):
-        return Category.objects.filter(is_active=True).annotate(product_count=Count("products"))
+        return Category.objects.filter(is_active=True, parent__isnull=True).annotate(product_count=Count("products"))
 
 
 class ContentBlockListCreateView(generics.ListCreateAPIView):
     queryset = ContentBlock.objects.all().select_related("section", "media")
     serializer_class = ContentBlockSerializer
     permission_classes = [IsStaffOrSuperuser]
+
+
+class ContentBlockUpsertView(APIView):
+    permission_classes = [IsStaffOrSuperuser]
+
+    def post(self, request):
+        page_slug = request.data.get("page_slug")
+        section_key = request.data.get("section_key")
+        block_key = request.data.get("key")
+
+        if not page_slug or not section_key or not block_key:
+            return Response(
+                {"detail": "page_slug, section_key, and key are required."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        page_title = request.data.get("page_title") or page_slug.replace("-", " ").title()
+        section_title = request.data.get("section_title") or section_key.replace("-", " ").title()
+
+        page, _ = Page.objects.get_or_create(slug=page_slug, defaults={"title": page_title})
+        section, _ = Section.objects.get_or_create(
+            page=page,
+            key=section_key,
+            defaults={"title": section_title},
+        )
+        block, _ = ContentBlock.objects.get_or_create(section=section, key=block_key)
+
+        for field in ("content_type", "value", "metadata"):
+            if field in request.data:
+                setattr(block, field, request.data.get(field))
+        if "media" in request.data:
+            block.media_id = request.data.get("media")
+        block.is_active = True
+        block.save()
+
+        serializer = ContentBlockSerializer(block, context={"request": request})
+        return Response(serializer.data)
 
 
 class ContentBlockDetailView(generics.RetrieveUpdateDestroyAPIView):
@@ -111,6 +148,44 @@ class MediaAssetListCreateView(generics.ListCreateAPIView):
 class MediaAssetDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = MediaAsset.objects.all()
     serializer_class = MediaAssetSerializer
+    permission_classes = [IsStaffOrSuperuser]
+
+
+class ProductListCreateView(generics.ListCreateAPIView):
+    queryset = Product.objects.all().select_related("category").prefetch_related("images", "filters")
+    serializer_class = ProductSerializer
+    permission_classes = [IsStaffOrSuperuser]
+
+
+class ProductDetailAdminView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Product.objects.all().select_related("category").prefetch_related("images", "filters")
+    serializer_class = ProductSerializer
+    permission_classes = [IsStaffOrSuperuser]
+
+
+class ProductImageCreateView(generics.CreateAPIView):
+    serializer_class = ProductImageSerializer
+    permission_classes = [IsStaffOrSuperuser]
+
+    def perform_create(self, serializer):
+        serializer.save(product_id=self.kwargs["pk"])
+
+
+class ProductImageDetailView(generics.DestroyAPIView):
+    queryset = ProductImage.objects.all()
+    serializer_class = ProductImageSerializer
+    permission_classes = [IsStaffOrSuperuser]
+
+
+class CategoryListCreateView(generics.ListCreateAPIView):
+    queryset = Category.objects.all().select_related("parent").prefetch_related("children")
+    serializer_class = CategorySerializer
+    permission_classes = [IsStaffOrSuperuser]
+
+
+class CategoryDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Category.objects.all().select_related("parent").prefetch_related("children")
+    serializer_class = CategorySerializer
     permission_classes = [IsStaffOrSuperuser]
 
 

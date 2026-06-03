@@ -2,7 +2,10 @@ import { Product } from "@/types/product";
 import { ApiProduct } from "@/types/productApi";
 
 const byType = (product: ApiProduct, type: string) =>
-  product.images?.filter((image) => image.image_type === type).map((image) => image.image).filter(Boolean) ?? [];
+  product.images
+    ?.filter((image) => image.image_type === type)
+    .map((image) => image.media_detail?.file_url || image.image)
+    .filter(Boolean) ?? [];
 
 export function mapProduct(product: ApiProduct): Product {
   const thumbnails = byType(product, "thumbnail");

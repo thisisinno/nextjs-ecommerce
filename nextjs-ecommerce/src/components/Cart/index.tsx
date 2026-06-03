@@ -5,7 +5,8 @@ import OrderSummary from "./OrderSummary";
 import { useAppSelector } from "@/redux/store";
 import SingleItem from "./SingleItem";
 import Breadcrumb from "../Common/Breadcrumb";
-import Link from "next/link";
+import EditableButton from "@/components/AdminInline/EditableButton";
+import EditableText from "@/components/AdminInline/EditableText";
 
 const Cart = () => {
   const cartItems = useAppSelector((state) => state.cartReducer.items);
@@ -21,8 +22,8 @@ const Cart = () => {
         <section className="overflow-hidden py-20 bg-gray-2">
           <div className="max-w-[1170px] w-full mx-auto px-4 sm:px-8 xl:px-0">
             <div className="flex flex-wrap items-center justify-between gap-5 mb-7.5">
-              <h2 className="font-medium text-dark text-2xl">Your Cart</h2>
-              <button className="text-blue">Clear Shopping Cart</button>
+              <EditableText as="h2" className="font-medium text-dark text-2xl" pageSlug="cart" sectionKey="main" contentKey="cart_title" contentType="title" value="Your Cart" />
+              <button className="text-blue"><EditableText pageSlug="cart" sectionKey="main" contentKey="clear_cart_label" contentType="label" value="Clear Shopping Cart" /></button>
             </div>
 
             <div className="bg-white rounded-[10px] shadow-1">
@@ -31,23 +32,23 @@ const Cart = () => {
                   {/* <!-- table header --> */}
                   <div className="flex items-center py-5.5 px-7.5">
                     <div className="min-w-[400px]">
-                      <p className="text-dark">Product</p>
+                      <EditableText as="p" className="text-dark" pageSlug="cart" sectionKey="table" contentKey="product_header" contentType="label" value="Product" />
                     </div>
 
                     <div className="min-w-[180px]">
-                      <p className="text-dark">Price</p>
+                      <EditableText as="p" className="text-dark" pageSlug="cart" sectionKey="table" contentKey="price_header" contentType="label" value="Price" />
                     </div>
 
                     <div className="min-w-[275px]">
-                      <p className="text-dark">Quantity</p>
+                      <EditableText as="p" className="text-dark" pageSlug="cart" sectionKey="table" contentKey="quantity_header" contentType="label" value="Quantity" />
                     </div>
 
                     <div className="min-w-[200px]">
-                      <p className="text-dark">Subtotal</p>
+                      <EditableText as="p" className="text-dark" pageSlug="cart" sectionKey="table" contentKey="subtotal_header" contentType="label" value="Subtotal" />
                     </div>
 
                     <div className="min-w-[50px]">
-                      <p className="text-dark text-right">Action</p>
+                      <EditableText as="p" className="text-dark text-right" pageSlug="cart" sectionKey="table" contentKey="action_header" contentType="label" value="Action" />
                     </div>
                   </div>
 
@@ -100,14 +101,16 @@ const Cart = () => {
               </svg>
             </div>
 
-            <p className="pb-6">Your cart is empty!</p>
+            <EditableText as="p" className="pb-6" pageSlug="cart" sectionKey="empty" contentKey="empty_message" contentType="text" value="Your cart is empty!" />
 
-            <Link
-              href="/shop-with-sidebar"
+            <EditableButton
               className="w-96 mx-auto flex justify-center font-medium text-white bg-dark py-[13px] px-6 rounded-md ease-out duration-200 hover:bg-opacity-95"
-            >
-              Continue Shopping
-            </Link>
+              pageSlug="cart"
+              sectionKey="empty"
+              contentKey="continue_shopping_button"
+              label="Continue Shopping"
+              href="/shop-with-sidebar"
+            />
           </div>
         </>
       )}

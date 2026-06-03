@@ -8,9 +8,24 @@ from dotenv import load_dotenv
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / ".env")
 
-SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "development-only-secret-key")
-DEBUG = os.getenv("DJANGO_DEBUG", "1") == "1"
-ALLOWED_HOSTS = [host.strip() for host in os.getenv("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1").split(",") if host.strip()]
+
+def env_list(name, default=""):
+    return [item.strip() for item in os.getenv(name, default).split(",") if item.strip()]
+
+
+def env_bool(name, default="false"):
+    return os.getenv(name, default).lower() in {"1", "true", "yes", "on"}
+
+
+SECRET_KEY = os.getenv("SECRET_KEY") or os.getenv("DJANGO_SECRET_KEY", "development-only-secret-key")
+DEBUG = env_bool("DEBUG", os.getenv("DJANGO_DEBUG", "true"))
+ALLOWED_HOSTS = env_list(
+    "ALLOWED_HOSTS",
+    os.getenv(
+        "DJANGO_ALLOWED_HOSTS",
+        "ecommerce.schoolsoft.online,188.191.147.105,localhost,127.0.0.1",
+    ),
+)
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -21,6 +36,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "corsheaders",
     "rest_framework",
+    "rest_framework_simplejwt",
     "ecommerce_app",
 ]
 
@@ -83,17 +99,25 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
+STATIC_ROOT = os.getenv("STATIC_ROOT", "/var/www/ecommerce/static")
 MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_ROOT = os.getenv("MEDIA_ROOT", "/var/www/ecommerce/media")
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-CORS_ALLOWED_ORIGINS = [
-    origin.strip()
-    for origin in os.getenv("CORS_ALLOWED_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000").split(",")
-    if origin.strip()
-]
-CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_ALL_ORIGINS = env_bool("CORS_ALLOW_ALL_ORIGINS", "false")
+if CORS_ALLOW_ALL_ORIGINS:
+    CORS_ALLOWED_ORIGINS = []
+else:
+    CORS_ALLOWED_ORIGINS = env_list(
+        "CORS_ALLOWED_ORIGINS",
+        "http://localhost:3000,http://127.0.0.1:3000,http://localhost:3025,http://127.0.0.1:3025,https://ecommerce.schoolsoft.online,http://ecommerce.schoolsoft.online",
+    )
+CSRF_TRUSTED_ORIGINS = env_list(
+    "CSRF_TRUSTED_ORIGINS",
+    "http://localhost:3000,http://127.0.0.1:3000,http://localhost:3025,http://127.0.0.1:3025,https://ecommerce.schoolsoft.online,http://ecommerce.schoolsoft.online",
+)
+CORS_ALLOW_CREDENTIALS = env_bool("CORS_ALLOW_CREDENTIALS", "true")
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (

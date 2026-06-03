@@ -13,6 +13,8 @@ import { useSelector } from "react-redux";
 import { selectTotalPrice } from "@/redux/features/cart-slice";
 import { useCartModalContext } from "@/app/context/CartSidebarModalContext";
 import Image from "next/image";
+import EditableText from "@/components/AdminInline/EditableText";
+import EditableImage from "@/components/AdminInline/EditableImage";
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -42,12 +44,10 @@ const Header = () => {
   });
 
   useEffect(() => {
-    getMenus()
-      .then((data) => {
-        const headerMenu = asArray(data).find((menu) => menu.location === "header");
-        if (headerMenu?.items?.length) setMenus(mapMenuItems(headerMenu.items));
-      })
-      .catch(() => setMenus(menuData));
+    getMenus().then((data) => {
+      const headerMenu = asArray(data).find((menu) => menu.location === "header");
+      if (headerMenu?.items?.length) setMenus(mapMenuItems(headerMenu.items));
+    });
   }, []);
 
   const options = [
@@ -77,12 +77,20 @@ const Header = () => {
           {/* <!-- header top left --> */}
           <div className="xl:w-auto flex-col sm:flex-row w-full flex sm:justify-between sm:items-center gap-5 sm:gap-10">
             <Link className="flex-shrink-0" href="/">
-              <Image
+              <EditableImage
                 src="/images/logo/logo.svg"
                 alt="Logo"
                 width={219}
                 height={36}
+                pageSlug="global"
+                pageTitle="Global"
+                sectionKey="branding"
+                sectionTitle="Branding"
+                contentKey="brand_logo"
               />
+              <span className="sr-only">
+                <EditableText pageSlug="global" pageTitle="Global" sectionKey="branding" sectionTitle="Branding" contentKey="brand_name" contentType="label" value="NextCommerce" />
+              </span>
             </Link>
 
             <div className="max-w-[475px] w-full">
@@ -158,12 +166,8 @@ const Header = () => {
               </svg>
 
               <div>
-                <span className="block text-2xs text-dark-4 uppercase">
-                  24/7 SUPPORT
-                </span>
-                <p className="font-medium text-custom-sm text-dark">
-                  (+965) 7492-3477
-                </p>
+                    <EditableText className="block text-2xs text-dark-4 uppercase" pageSlug="global" sectionKey="header" contentKey="support_label" contentType="label" value="24/7 SUPPORT" />
+                    <EditableText as="p" className="font-medium text-custom-sm text-dark" pageSlug="global" sectionKey="header" contentKey="support_phone" contentType="text" value="(+965) 7492-3477" />
               </div>
             </div>
 
@@ -195,12 +199,8 @@ const Header = () => {
                   </svg>
 
                   <div>
-                    <span className="block text-2xs text-dark-4 uppercase">
-                      account
-                    </span>
-                    <p className="font-medium text-custom-sm text-dark">
-                      Sign In
-                    </p>
+                    <EditableText className="block text-2xs text-dark-4 uppercase" pageSlug="global" sectionKey="header" contentKey="account_label" contentType="label" value="account" />
+                    <EditableText as="p" className="font-medium text-custom-sm text-dark" pageSlug="global" sectionKey="header" contentKey="signin_label" contentType="label" value="Sign In" />
                   </div>
                 </Link>
 
@@ -246,9 +246,7 @@ const Header = () => {
                   </span>
 
                   <div>
-                    <span className="block text-2xs text-dark-4 uppercase">
-                      cart
-                    </span>
+                    <EditableText className="block text-2xs text-dark-4 uppercase" pageSlug="global" sectionKey="header" contentKey="cart_label" contentType="label" value="cart" />
                     <p className="font-medium text-custom-sm text-dark">
                       ${totalPrice}
                     </p>

@@ -8,8 +8,20 @@ export type AnalyticsPayload = {
   metadata?: Record<string, unknown>;
 };
 
-export const trackAnalyticsEvent = (payload: AnalyticsPayload) =>
-  apiRequest("/analytics-events/", { method: "POST", auth: false, body: JSON.stringify(payload) });
+export async function trackAnalyticsEvent(payload: AnalyticsPayload) {
+  try {
+    await apiRequest("/analytics/events/", {
+      method: "POST",
+      auth: false,
+      body: JSON.stringify(payload),
+      silent: true,
+    });
+  } catch (error) {
+    if (process.env.NODE_ENV !== "production") {
+      console.debug("[analytics] skipped", error);
+    }
+  }
+}
 
 export const trackCartActivity = (payload: {
   action: "add" | "remove" | "update";

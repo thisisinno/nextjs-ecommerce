@@ -14,7 +14,6 @@ const getSigninErrorMessage = (error: unknown) => {
       return "Cannot reach backend API. Check network, CORS, HTTPS, Nginx, or backend server.";
     }
     if (error.status === 401) return "Invalid username or password.";
-    if (error.status >= 500) return "Server error. Please check backend logs.";
     return error.message || "Unable to sign in.";
   }
 
@@ -56,9 +55,6 @@ const Signin = () => {
                     router.push("/my-account");
                   } catch (error) {
                     setError(getSigninErrorMessage(error));
-                    if (process.env.NODE_ENV !== "production") {
-                      console.error("[auth] login failed", error);
-                    }
                   } finally {
                     setIsLoading(false);
                   }

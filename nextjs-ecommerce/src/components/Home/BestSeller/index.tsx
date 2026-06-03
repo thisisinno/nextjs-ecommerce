@@ -1,8 +1,9 @@
 import React from "react";
 import SingleItem from "./SingleItem";
 import Image from "next/image";
-import Link from "next/link";
 import shopData from "@/components/Shop/shopData";
+import EditableButton from "@/components/AdminInline/EditableButton";
+import EditableText from "@/components/AdminInline/EditableText";
 
 const BestSeller = () => {
   return (
@@ -18,11 +19,9 @@ const BestSeller = () => {
                 width={17}
                 height={17}
               />
-              This Month
+              <EditableText pageSlug="home" sectionKey="best_sellers" contentKey="best_sellers_label" contentType="label" value="This Month" />
             </span>
-            <h2 className="font-semibold text-xl xl:text-heading-5 text-dark">
-              Best Sellers
-            </h2>
+            <EditableText as="h2" className="font-semibold text-xl xl:text-heading-5 text-dark" pageSlug="home" sectionKey="best_sellers" contentKey="best_sellers_title" contentType="title" value="Best Sellers" />
           </div>
         </div>
 
@@ -34,12 +33,14 @@ const BestSeller = () => {
         </div>
 
         <div className="text-center mt-12.5">
-          <Link
-            href="/shop-without-sidebar"
+          <EditableButton
             className="inline-flex font-medium text-custom-sm py-3 px-7 sm:px-12.5 rounded-md border-gray-3 border bg-gray-1 text-dark ease-out duration-200 hover:bg-dark hover:text-white hover:border-transparent"
-          >
-            View All
-          </Link>
+            pageSlug="home"
+            sectionKey="best_sellers"
+            contentKey="best_sellers_button"
+            label="View All"
+            href="/shop-without-sidebar"
+          />
         </div>
       </div>
     </section>

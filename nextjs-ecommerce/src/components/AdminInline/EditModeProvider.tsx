@@ -9,6 +9,7 @@ type EditModeContextValue = {
   isAdmin: boolean;
   editMode: boolean;
   setEditMode: (value: boolean) => void;
+  toggleEditMode: () => void;
   refreshUser: () => Promise<void>;
   logout: () => void;
 };
@@ -21,7 +22,11 @@ export function EditModeProvider({ children }: { children: React.ReactNode }) {
 
   const refreshUser = async () => {
     try {
-      setUser(await getCurrentUser());
+      const currentUser = await getCurrentUser();
+      setUser(currentUser);
+      if (!currentUser?.is_staff && !currentUser?.is_superuser) {
+        setEditMode(false);
+      }
     } catch {
       setUser(null);
       setEditMode(false);
@@ -38,6 +43,7 @@ export function EditModeProvider({ children }: { children: React.ReactNode }) {
       isAdmin: Boolean(user?.is_staff || user?.is_superuser),
       editMode,
       setEditMode,
+      toggleEditMode: () => setEditMode((current) => !current),
       refreshUser,
       logout: () => {
         apiLogout();

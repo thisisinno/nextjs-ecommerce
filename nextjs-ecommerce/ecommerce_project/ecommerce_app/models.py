@@ -121,6 +121,7 @@ class MenuItem(TimeStampedModel):
 
 
 class Category(TimeStampedModel):
+    parent = models.ForeignKey("self", related_name="children", null=True, blank=True, on_delete=models.CASCADE)
     title = models.CharField(max_length=180)
     slug = models.SlugField(unique=True, blank=True)
     image = models.CharField(max_length=255, blank=True)

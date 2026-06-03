@@ -3,6 +3,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { useCallback, useRef } from "react";
 import testimonialsData from "./testimonialsData";
 import Image from "next/image";
+import EditableText from "@/components/AdminInline/EditableText";
 
 // Import Swiper styles
 import "swiper/css/navigation";
@@ -37,11 +38,9 @@ const Testimonials = () => {
                     width={17}
                     height={17}
                   />
-                  Testimonials
+                  <EditableText pageSlug="home" sectionKey="testimonials" contentKey="testimonials_label" contentType="label" value="Testimonials" />
                 </span>
-                <h2 className="font-semibold text-xl xl:text-heading-5 text-dark">
-                  User Feedbacks
-                </h2>
+                <EditableText as="h2" className="font-semibold text-xl xl:text-heading-5 text-dark" pageSlug="home" sectionKey="testimonials" contentKey="testimonials_title" contentType="title" value="User Feedbacks" />
               </div>
 
               <div className="flex items-center gap-3">

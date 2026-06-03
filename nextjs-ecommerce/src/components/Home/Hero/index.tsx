@@ -2,6 +2,8 @@ import React from "react";
 import HeroCarousel from "./HeroCarousel";
 import HeroFeature from "./HeroFeature";
 import Image from "next/image";
+import EditableImage from "@/components/AdminInline/EditableImage";
+import EditableText from "@/components/AdminInline/EditableText";
 
 const Hero = () => {
   return (
@@ -28,29 +30,24 @@ const Hero = () => {
               <div className="w-full relative rounded-[10px] bg-white p-4 sm:p-7.5">
                 <div className="flex items-center gap-14">
                   <div>
-                    <h2 className="max-w-[153px] font-semibold text-dark text-xl mb-20">
-                      <a href="#"> iPhone 14 Plus & 14 Pro Max </a>
-                    </h2>
+                    <EditableText as="h2" className="max-w-[153px] font-semibold text-dark text-xl mb-20" pageSlug="home" sectionKey="hero_offers" contentKey="offer_1_title" contentType="title" value="iPhone 14 Plus & 14 Pro Max" />
 
                     <div>
-                      <p className="font-medium text-dark-4 text-custom-sm mb-1.5">
-                        limited time offer
-                      </p>
+                      <EditableText as="p" className="font-medium text-dark-4 text-custom-sm mb-1.5" pageSlug="home" sectionKey="hero_offers" contentKey="offer_1_caption" contentType="caption" value="limited time offer" />
                       <span className="flex items-center gap-3">
-                        <span className="font-medium text-heading-5 text-red">
-                          $699
-                        </span>
-                        <span className="font-medium text-2xl text-dark-4 line-through">
-                          $999
-                        </span>
+                        <EditableText className="font-medium text-heading-5 text-red" pageSlug="home" sectionKey="hero_offers" contentKey="offer_1_price" contentType="price" value="$699" />
+                        <EditableText className="font-medium text-2xl text-dark-4 line-through" pageSlug="home" sectionKey="hero_offers" contentKey="offer_1_old_price" contentType="price" value="$999" />
                       </span>
                     </div>
                   </div>
 
                   <div>
-                    <Image
+                    <EditableImage
                       src="/images/hero/hero-02.png"
                       alt="mobile image"
+                      pageSlug="home"
+                      sectionKey="hero_offers"
+                      contentKey="offer_1_image"
                       width={123}
                       height={161}
                     />
@@ -60,29 +57,24 @@ const Hero = () => {
               <div className="w-full relative rounded-[10px] bg-white p-4 sm:p-7.5">
                 <div className="flex items-center gap-14">
                   <div>
-                    <h2 className="max-w-[153px] font-semibold text-dark text-xl mb-20">
-                      <a href="#"> Wireless Headphone </a>
-                    </h2>
+                    <EditableText as="h2" className="max-w-[153px] font-semibold text-dark text-xl mb-20" pageSlug="home" sectionKey="hero_offers" contentKey="offer_2_title" contentType="title" value="Wireless Headphone" />
 
                     <div>
-                      <p className="font-medium text-dark-4 text-custom-sm mb-1.5">
-                        limited time offer
-                      </p>
+                      <EditableText as="p" className="font-medium text-dark-4 text-custom-sm mb-1.5" pageSlug="home" sectionKey="hero_offers" contentKey="offer_2_caption" contentType="caption" value="limited time offer" />
                       <span className="flex items-center gap-3">
-                        <span className="font-medium text-heading-5 text-red">
-                          $699
-                        </span>
-                        <span className="font-medium text-2xl text-dark-4 line-through">
-                          $999
-                        </span>
+                        <EditableText className="font-medium text-heading-5 text-red" pageSlug="home" sectionKey="hero_offers" contentKey="offer_2_price" contentType="price" value="$699" />
+                        <EditableText className="font-medium text-2xl text-dark-4 line-through" pageSlug="home" sectionKey="hero_offers" contentKey="offer_2_old_price" contentType="price" value="$999" />
                       </span>
                     </div>
                   </div>
 
                   <div>
-                    <Image
+                    <EditableImage
                       src="/images/hero/hero-01.png"
                       alt="mobile image"
+                      pageSlug="home"
+                      sectionKey="hero_offers"
+                      contentKey="offer_2_image"
                       width={123}
                       height={161}
                     />

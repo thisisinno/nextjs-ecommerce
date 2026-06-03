@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import Image from "next/image";
+import EditableText from "@/components/AdminInline/EditableText";
 
 const PaymentMethod = () => {
   const [payment, setPayment] = useState("bank");
   return (
     <div className="bg-white shadow-1 rounded-[10px] mt-7.5">
       <div className="border-b border-gray-3 py-5 px-4 sm:px-8.5">
-        <h3 className="font-medium text-xl text-dark">Payment Method</h3>
+        <EditableText as="h3" className="font-medium text-xl text-dark" pageSlug="checkout" sectionKey="payment" contentKey="payment_method_title" contentType="title" value="Payment Method" />
       </div>
 
       <div className="p-4 sm:p-8.5">

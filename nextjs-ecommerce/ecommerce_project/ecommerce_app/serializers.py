@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.db.models import Count
 from rest_framework import serializers
 
 from .models import (
@@ -96,11 +97,21 @@ class MenuSerializer(serializers.ModelSerializer):
 
 
 class CategorySerializer(serializers.ModelSerializer):
-    product_count = serializers.IntegerField(read_only=True)
+    product_count = serializers.SerializerMethodField()
+    children = serializers.SerializerMethodField()
 
     class Meta:
         model = Category
         fields = "__all__"
+
+    def get_children(self, obj):
+        children = obj.children.filter(is_active=True).annotate(product_count=Count("products"))
+        return CategorySerializer(children, many=True, context=self.context).data
+
+    def get_product_count(self, obj):
+        if hasattr(obj, "product_count"):
+            return obj.product_count
+        return obj.products.count()
 
 
 class FilterOptionSerializer(serializers.ModelSerializer):

@@ -2,14 +2,15 @@
 import React, { useState } from "react";
 import EditableDropdown from "@/components/AdminInline/EditableDropdown";
 
-const GenderItem = ({ category }) => {
-  const [selected, setSelected] = useState(false);
+const GenderItem = ({ category, selected, onSelect }) => {
+  const value = category.value || String(category.name || "").toLowerCase().replace(/\s+/g, "-");
   return (
     <button
+      type="button"
       className={`${
         selected && "text-blue"
       } group flex items-center justify-between ease-out duration-200 hover:text-blue `}
-      onClick={() => setSelected(!selected)}
+      onClick={() => onSelect(selected ? "" : value)}
     >
       <div className="flex items-center gap-2">
         <div
@@ -49,7 +50,7 @@ const GenderItem = ({ category }) => {
   );
 };
 
-const GenderDropdown = ({ genders, group, onCreated }) => {
+const GenderDropdown = ({ genders, group, onCreated, selectedValue = "", onSelect = (_value) => {} }) => {
   const [toggleDropdown, setToggleDropdown] = useState(true);
 
   return (
@@ -94,7 +95,7 @@ const GenderDropdown = ({ genders, group, onCreated }) => {
         }`}
       >
         {genders.map((gender, key) => (
-          <GenderItem key={key} category={gender} />
+          <GenderItem key={key} category={gender} selected={selectedValue === (gender.value || String(gender.name || "").toLowerCase().replace(/\s+/g, "-"))} onSelect={onSelect} />
         ))}
       </div>
     </div>

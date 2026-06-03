@@ -2,7 +2,7 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useCallback, useRef, useEffect } from "react";
 import data from "./categoryData";
-import Image from "next/image";
+import EditableText from "@/components/AdminInline/EditableText";
 
 // Import Swiper styles
 import "swiper/css/navigation";
@@ -70,11 +70,9 @@ const Categories = () => {
                     </clipPath>
                   </defs>
                 </svg>
-                Categories
+                <EditableText pageSlug="home" sectionKey="categories" contentKey="categories_label" contentType="label" value="Categories" />
               </span>
-              <h2 className="font-semibold text-xl xl:text-heading-5 text-dark">
-                Browse by Category
-              </h2>
+              <EditableText as="h2" className="font-semibold text-xl xl:text-heading-5 text-dark" pageSlug="home" sectionKey="categories" contentKey="categories_title" contentType="title" value="Browse by Category" />
             </div>
 
             <div className="flex items-center gap-3">

@@ -1,4 +1,5 @@
 import React from "react";
+import EditableText from "@/components/AdminInline/EditableText";
 
 const Discount = () => {
   return (
@@ -7,7 +8,7 @@ const Discount = () => {
         {/* <!-- coupon box --> */}
         <div className="bg-white shadow-1 rounded-[10px]">
           <div className="border-b border-gray-3 py-5 px-4 sm:px-5.5">
-            <h3 className="">Have any discount code?</h3>
+            <EditableText as="h3" pageSlug="cart" sectionKey="discount" contentKey="discount_title" contentType="title" value="Have any discount code?" />
           </div>
 
           <div className="py-8 px-4 sm:px-8.5">
@@ -26,7 +27,7 @@ const Discount = () => {
                 type="submit"
                 className="inline-flex font-medium text-white bg-blue py-3 px-8 rounded-md ease-out duration-200 hover:bg-blue-dark"
               >
-                Apply Code
+                <EditableText pageSlug="cart" sectionKey="discount" contentKey="apply_code_button" contentType="button" value="Apply Code" />
               </button>
             </div>
           </div>

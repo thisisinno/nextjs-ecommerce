@@ -64,7 +64,8 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ("title", "slug", "order", "is_active")
+    list_display = ("title", "slug", "parent", "order", "is_active")
+    list_filter = ("parent", "is_active")
     prepopulated_fields = {"slug": ("title",)}
 
 

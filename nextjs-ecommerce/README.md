@@ -28,3 +28,79 @@ While NextMerce Pro features advanced functionalities, seamless integration, and
 
 Version 0.1.2 - [Mar 16, 2026]
 - Update Next.js, React, and React DOM dependencies, add baseline-browser-mapping
+
+## Backend Login Test
+
+Use this request to verify the Django SimpleJWT login endpoint:
+
+```bash
+curl -X POST https://ecommerce.schoolsoft.online/api/auth/token/ \
+  -H "Content-Type: application/json" \
+  -d '{"username":"YOUR_USERNAME","password":"YOUR_PASSWORD"}'
+```
+
+Expected success:
+
+```json
+{
+  "refresh": "...",
+  "access": "..."
+}
+```
+
+Expected failure:
+
+```json
+{
+  "detail": "No active account found with the given credentials"
+}
+```
+
+## API Troubleshooting
+
+Backend local test:
+
+```bash
+cd ecommerce_project
+source venv/bin/activate
+python manage.py check
+python manage.py migrate
+python manage.py runserver 127.0.0.1:8000
+```
+
+CORS preflight test:
+
+```bash
+curl -i -X OPTIONS http://127.0.0.1:8000/api/auth/token/ \
+  -H "Origin: http://localhost:3000" \
+  -H "Access-Control-Request-Method: POST" \
+  -H "Access-Control-Request-Headers: content-type,authorization"
+```
+
+Expected header:
+
+```text
+access-control-allow-origin: http://localhost:3000
+```
+
+Token test:
+
+```bash
+curl -i -X POST http://127.0.0.1:8000/api/auth/token/ \
+  -H "Content-Type: application/json" \
+  -d '{"username":"YOUR_USERNAME","password":"YOUR_PASSWORD"}'
+```
+
+Frontend local test:
+
+```bash
+cp .env.example .env.local
+npm install
+npm run dev
+```
+
+Production build reminder: `NEXT_PUBLIC_*` variables are baked into the client bundle during `next build`, so set `NEXT_PUBLIC_API_BASE_URL` before building:
+
+```bash
+NEXT_PUBLIC_API_BASE_URL=https://ecommerce.schoolsoft.online/api npm run build
+```

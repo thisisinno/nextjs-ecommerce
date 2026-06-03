@@ -1,6 +1,9 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import EditableButton from "@/components/AdminInline/EditableButton";
+import EditableImage from "@/components/AdminInline/EditableImage";
+import EditableText from "@/components/AdminInline/EditableText";
 
 const CounDown = () => {
   const [days, setDays] = useState(0);
@@ -31,15 +34,11 @@ const CounDown = () => {
       <div className="max-w-[1170px] w-full mx-auto px-4 sm:px-8 xl:px-0">
         <div className="relative overflow-hidden z-1 rounded-lg bg-[#D0E9F3] p-4 sm:p-7.5 lg:p-10 xl:p-15">
           <div className="max-w-[422px] w-full">
-            <span className="block font-medium text-custom-1 text-blue mb-2.5">
-              Don’t Miss!!
-            </span>
+            <EditableText className="block font-medium text-custom-1 text-blue mb-2.5" pageSlug="home" sectionKey="countdown" contentKey="countdown_label" contentType="label" value="Don't Miss!!" />
 
-            <h2 className="font-bold text-dark text-xl lg:text-heading-4 xl:text-heading-3 mb-3">
-              Enhance Your Music Experience
-            </h2>
+            <EditableText as="h2" className="font-bold text-dark text-xl lg:text-heading-4 xl:text-heading-3 mb-3" pageSlug="home" sectionKey="countdown" contentKey="countdown_title" contentType="title" value="Enhance Your Music Experience" />
 
-            <p>The Havit H206d is a wired PC headphone.</p>
+            <EditableText as="p" pageSlug="home" sectionKey="countdown" contentKey="countdown_description" contentType="text" value="The Havit H206d is a wired PC headphone." multiline />
 
             {/* <!-- Countdown timer --> */}
             <div
@@ -57,7 +56,7 @@ const CounDown = () => {
                   {days < 10 ? "0" + days : days}{" "}
                 </span>
                 <span className="block text-custom-sm text-dark text-center">
-                  Days
+                  <EditableText pageSlug="home" sectionKey="countdown" contentKey="countdown_days_label" contentType="label" value="Days" />
                 </span>
               </div>
 
@@ -71,7 +70,7 @@ const CounDown = () => {
                   {hours < 10 ? "0" + hours : hours}{" "}
                 </span>
                 <span className="block text-custom-sm text-dark text-center">
-                  Hours
+                  <EditableText pageSlug="home" sectionKey="countdown" contentKey="countdown_hours_label" contentType="label" value="Hours" />
                 </span>
               </div>
 
@@ -84,7 +83,7 @@ const CounDown = () => {
                   {minutes < 10 ? "0" + minutes : minutes}{" "}
                 </span>
                 <span className="block text-custom-sm text-dark text-center">
-                  Minutes
+                  <EditableText pageSlug="home" sectionKey="countdown" contentKey="countdown_minutes_label" contentType="label" value="Minutes" />
                 </span>
               </div>
 
@@ -97,18 +96,20 @@ const CounDown = () => {
                   {seconds < 10 ? "0" + seconds : seconds}{" "}
                 </span>
                 <span className="block text-custom-sm text-dark text-center">
-                  Seconds
+                  <EditableText pageSlug="home" sectionKey="countdown" contentKey="countdown_seconds_label" contentType="label" value="Seconds" />
                 </span>
               </div>
             </div>
             {/* <!-- Countdown timer ends --> */}
 
-            <a
-              href="#"
+            <EditableButton
               className="inline-flex font-medium text-custom-sm text-white bg-blue py-3 px-9.5 rounded-md ease-out duration-200 hover:bg-blue-dark mt-7.5"
-            >
-              Check it Out!
-            </a>
+              pageSlug="home"
+              sectionKey="countdown"
+              contentKey="countdown_button"
+              label="Check it Out!"
+              href="#"
+            />
           </div>
 
           {/* <!-- bg shapes --> */}
@@ -119,10 +120,13 @@ const CounDown = () => {
             width={737}
             height={482}
           />
-          <Image
+          <EditableImage
             src="/images/countdown/countdown-01.png"
             alt="product"
             className="hidden lg:block absolute right-4 xl:right-33 bottom-4 xl:bottom-10 -z-1"
+            pageSlug="home"
+            sectionKey="countdown"
+            contentKey="countdown_image"
             width={411}
             height={376}
           />

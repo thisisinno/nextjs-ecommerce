@@ -3,14 +3,15 @@
 import { useState } from "react";
 import EditableDropdown from "@/components/AdminInline/EditableDropdown";
 
-const CategoryItem = ({ category }) => {
-  const [selected, setSelected] = useState(false);
+const CategoryItem = ({ category, selected, onSelect }) => {
+  const value = category.value || String(category.name || "").toLowerCase().replace(/\s+/g, "-");
   return (
     <button
+      type="button"
       className={`${
         selected && "text-blue"
       } group flex items-center justify-between ease-out duration-200 hover:text-blue `}
-      onClick={() => setSelected(!selected)}
+      onClick={() => onSelect(selected ? "" : value)}
     >
       <div className="flex items-center gap-2">
         <div
@@ -50,7 +51,7 @@ const CategoryItem = ({ category }) => {
   );
 };
 
-const CategoryDropdown = ({ categories, group, onCreated, title = "Category" }) => {
+const CategoryDropdown = ({ categories, group, onCreated, title = "Category", selectedValue = "", onSelect = (_value) => {} }) => {
   const [toggleDropdown, setToggleDropdown] = useState(true);
 
   return (
@@ -98,7 +99,7 @@ const CategoryDropdown = ({ categories, group, onCreated, title = "Category" }) 
         }`}
       >
         {categories.map((category, key) => (
-          <CategoryItem key={key} category={category} />
+          <CategoryItem key={key} category={category} selected={selectedValue === (category.value || String(category.name || "").toLowerCase().replace(/\s+/g, "-"))} onSelect={onSelect} />
         ))}
       </div>
     </div>

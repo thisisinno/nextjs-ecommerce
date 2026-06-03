@@ -50,13 +50,13 @@ export default function RootLayout({
                       <CartSidebarModal />
                       <PreviewSliderModal />
                       <AdminBottomNav />
+                      <Footer />
                     </PreviewSliderProvider>
                   </ModalProvider>
                 </CartModalProvider>
               </EditModeProvider>
             </ReduxProvider>
             <ScrollToTop />
-            <Footer />
           </>
         )}
       </body>

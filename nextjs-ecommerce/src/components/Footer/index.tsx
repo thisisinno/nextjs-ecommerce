@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import EditableText from "@/components/AdminInline/EditableText";
 
 const Footer = () => {
   const year = new Date().getFullYear();
@@ -10,9 +11,7 @@ const Footer = () => {
         {/* <!-- footer menu start --> */}
         <div className="flex flex-wrap xl:flex-nowrap gap-10 xl:gap-19 xl:justify-between pt-17.5 xl:pt-22.5 pb-10 xl:pb-15">
           <div className="max-w-[330px] w-full">
-            <h2 className="mb-7.5 text-custom-1 font-medium text-dark">
-              Help & Support
-            </h2>
+            <EditableText as="h2" className="mb-7.5 text-custom-1 font-medium text-dark" pageSlug="global" sectionKey="footer" contentKey="support_heading" contentType="title" value="Help & Support" />
 
             <ul className="flex flex-col gap-3">
               <li className="flex gap-4.5">
@@ -32,7 +31,7 @@ const Footer = () => {
                     />
                   </svg>
                 </span>
-                685 Market Street,Las Vegas, LA 95820,United States.
+                <EditableText pageSlug="global" sectionKey="footer" contentKey="address" contentType="text" value="685 Market Street,Las Vegas, LA 95820,United States." multiline />
               </li>
 
               <li>
@@ -61,7 +60,7 @@ const Footer = () => {
                       fill="#3C50E0"
                     />
                   </svg>
-                  (+099) 532-786-9843
+                  <EditableText pageSlug="global" sectionKey="footer" contentKey="phone" contentType="text" value="(+099) 532-786-9843" />
                 </a>
               </li>
 
@@ -81,7 +80,7 @@ const Footer = () => {
                       fill="#3C50E0"
                     />
                   </svg>
-                  support@example.com
+                  <EditableText pageSlug="global" sectionKey="footer" contentKey="email" contentType="text" value="support@example.com" />
                 </a>
               </li>
             </ul>
@@ -197,43 +196,39 @@ const Footer = () => {
           </div>
 
           <div className="w-full sm:w-auto">
-            <h2 className="mb-7.5 text-custom-1 font-medium text-dark">
-              Account
-            </h2>
+            <EditableText as="h2" className="mb-7.5 text-custom-1 font-medium text-dark" pageSlug="global" sectionKey="footer" contentKey="account_heading" contentType="title" value="Account" />
 
             <ul className="flex flex-col gap-3.5">
               <li>
                 <a className="ease-out duration-200 hover:text-blue" href="#">
-                  My Account
+                  <EditableText pageSlug="global" sectionKey="footer" contentKey="account_link_1" contentType="label" value="My Account" />
                 </a>
               </li>
               <li>
                 <a className="ease-out duration-200 hover:text-blue" href="#">
-                  Login / Register
+                  <EditableText pageSlug="global" sectionKey="footer" contentKey="account_link_2" contentType="label" value="Login / Register" />
                 </a>
               </li>
               <li>
                 <a className="ease-out duration-200 hover:text-blue" href="#">
-                  Cart
+                  <EditableText pageSlug="global" sectionKey="footer" contentKey="account_link_3" contentType="label" value="Cart" />
                 </a>
               </li>
               <li>
                 <a className="ease-out duration-200 hover:text-blue" href="#">
-                  Wishlist
+                  <EditableText pageSlug="global" sectionKey="footer" contentKey="account_link_4" contentType="label" value="Wishlist" />
                 </a>
               </li>
               <li>
                 <a className="ease-out duration-200 hover:text-blue" href="#">
-                  Shop
+                  <EditableText pageSlug="global" sectionKey="footer" contentKey="account_link_5" contentType="label" value="Shop" />
                 </a>
               </li>
             </ul>
           </div>
 
           <div className="w-full sm:w-auto">
-            <h2 className="mb-7.5 text-custom-1 font-medium text-dark">
-              Quick Link
-            </h2>
+            <EditableText as="h2" className="mb-7.5 text-custom-1 font-medium text-dark" pageSlug="global" sectionKey="footer" contentKey="quick_link_heading" contentType="title" value="Quick Link" />
 
             <ul className="flex flex-col gap-3">
               <li>
